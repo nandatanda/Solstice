@@ -7,6 +7,7 @@ window = pygame.display.set_mode((viewport))
 pygame.display.set_caption('Work In Progress')
 
 player = characters.Player(0, 0)
+npc = characters.NPC(200,200)
 
 run = True
 while run:
@@ -20,5 +21,7 @@ while run:
     player.move(keys)
  
     window.fill((0, 0, 0))
+    npc.set_facing(player)
+    npc.draw(window)
     player.draw(window)
     pygame.display.update()
