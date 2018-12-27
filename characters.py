@@ -62,40 +62,45 @@ class Player():
             self.tile = 0
             return
 
-    def move(self, keys):
+    def move(self, keys, isColliding):
         width = display.Info().current_w
         height = display.Info().current_h
-        if keys[K_UP] or keys[K_w]:
-            self.isWalking = True
-            self.isLookingUp = True
-            self.isLookingDown = False
-            self.isLookingLeft = False
-            self.isLookingRight = False
-            self.y -= self.velocity
-        elif keys[K_DOWN] or keys[K_s]:
-            self.isWalking = True
-            self.isLookingUp = False
-            self.isLookingDown = True
-            self.isLookingLeft = False
-            self.isLookingRight = False
-            self.y += self.velocity
-        elif keys[K_LEFT] or keys[K_a]:
-            self.isWalking = True
-            self.isLookingUp = False
-            self.isLookingDown = False
-            self.isLookingLeft = True
-            self.isLookingRight = False
-            self.x -= self.velocity
-        elif keys[K_RIGHT] or keys[K_d]:
-            self.isWalking = True
-            self.isLookingUp = False
-            self.isLookingDown = False
-            self.isLookingLeft = False
-            self.isLookingRight = True
-            self.x += self.velocity
+
+        if not isColliding:
+            if keys[K_UP] or keys[K_w]:
+                self.isWalking = True
+                self.isLookingUp = True
+                self.isLookingDown = False
+                self.isLookingLeft = False
+                self.isLookingRight = False
+                self.y -= self.velocity
+            elif keys[K_DOWN] or keys[K_s]:
+                self.isWalking = True
+                self.isLookingUp = False
+                self.isLookingDown = True
+                self.isLookingLeft = False
+                self.isLookingRight = False
+                self.y += self.velocity
+            elif keys[K_LEFT] or keys[K_a]:
+                self.isWalking = True
+                self.isLookingUp = False
+                self.isLookingDown = False
+                self.isLookingLeft = True
+                self.isLookingRight = False
+                self.x -= self.velocity
+            elif keys[K_RIGHT] or keys[K_d]:
+                self.isWalking = True
+                self.isLookingUp = False
+                self.isLookingDown = False
+                self.isLookingLeft = False
+                self.isLookingRight = True
+                self.x += self.velocity
+            else:
+                self.isWalking = False
         else:
-            self.isWalking = False
+            pass
         return
+
 
 class NPC():
     def __init__(self, x, y):
@@ -130,33 +135,33 @@ class NPC():
             image.load('assets/images/characters/02/2 - R3.png')]
 
     def draw(self, window):
-            if self.isWalking:
-                if self.isLookingUp:
-                    window.blit(self.upTiles[self.tile], (self.x, self.y))
-                elif self.isLookingDown:
-                    window.blit(self.downTiles[self.tile], (self.x, self.y))
-                elif self.isLookingLeft:
-                    window.blit(self.leftTiles[self.tile], (self.x, self.y))
-                else:
-                    window.blit(self.rightTiles[self.tile], (self.x, self.y))
-                self.frameCount += 1
-                if self.frameCount % self.frameDelay == 1:
-                    self.tile += 1
-                    if self.tile > 2:
-                        self.tile = 0
-                return
+        if self.isWalking:
+            if self.isLookingUp:
+                window.blit(self.upTiles[self.tile], (self.x, self.y))
+            elif self.isLookingDown:
+                window.blit(self.downTiles[self.tile], (self.x, self.y))
+            elif self.isLookingLeft:
+                window.blit(self.leftTiles[self.tile], (self.x, self.y))
             else:
-                if self.isLookingUp:
-                    window.blit(self.upTiles[0], (self.x, self.y))
-                elif self.isLookingDown:
-                    window.blit(self.downTiles[0], (self.x, self.y))
-                elif self.isLookingLeft:
-                    window.blit(self.leftTiles[0], (self.x, self.y))
-                else:
-                    window.blit(self.rightTiles[0], (self.x, self.y))
-                self.frameCount = 0
-                self.tile = 0
-                return
+                window.blit(self.rightTiles[self.tile], (self.x, self.y))
+            self.frameCount += 1
+            if self.frameCount % self.frameDelay == 1:
+                self.tile += 1
+                if self.tile > 2:
+                    self.tile = 0
+            return
+        else:
+            if self.isLookingUp:
+                window.blit(self.upTiles[0], (self.x, self.y))
+            elif self.isLookingDown:
+                window.blit(self.downTiles[0], (self.x, self.y))
+            elif self.isLookingLeft:
+                window.blit(self.leftTiles[0], (self.x, self.y))
+            else:
+                window.blit(self.rightTiles[0], (self.x, self.y))
+            self.frameCount = 0
+            self.tile = 0
+            return
 
     def set_facing(self, player):
         windowWidth = display.Info().current_w
@@ -192,4 +197,20 @@ class NPC():
                 self.isLookingRight = False
         return
 
-    
+    def detect_collision(self, player):
+        playerCenterX = player.x + player.width / 2
+        playerCenterY = player.y + player.height / 2
+        playerRangeX = player.width / 2 + player.velocity
+        playerRangeY = player.height / 2 + player.velocity
+        selfCenterX = self.x + self.width / 2
+        selfCenterY = self.y + self.height / 2
+        selfRangeX = self.width / 2 + self.velocity
+        selfRangeY = self.height / 2 + self.velocity
+
+        distanceX = abs(selfCenterX - playerCenterX)
+        distanceY = abs(selfCenterY - playerCenterY)
+
+        if distanceX < selfRangeX + playerRangeX:
+            if distanceY < selfRangeY + playerRangeY:
+                return True
+        return False

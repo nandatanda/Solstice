@@ -18,10 +18,12 @@ while run:
             run = False
 
     keys = pygame.key.get_pressed()
-    player.move(keys)
- 
-    window.fill((0, 0, 0))
+    collided = npc.detect_collision(player)
+    print (collided)
+    player.move(keys, collided)
     npc.set_facing(player)
+
+    window.fill((0, 0, 0))
     npc.draw(window)
     player.draw(window)
     pygame.display.update()
