@@ -70,32 +70,32 @@ class Player():
         width = display.Info().current_w
         height = display.Info().current_h
 
-        if self.canGoUp:
-            if keys[K_UP] or keys[K_w]:
+        if keys[K_UP] or keys[K_w]:
+            if self.canGoUp:
                 self.isWalking = True
                 self.isLookingUp = True
                 self.isLookingDown = False
                 self.isLookingLeft = False
                 self.isLookingRight = False
                 self.y -= self.velocity
-        if self.canGoDown:
-            if keys[K_DOWN] or keys[K_s]:
+        elif keys[K_DOWN] or keys[K_s]:
+            if self.canGoDown:
                 self.isWalking = True
                 self.isLookingUp = False
                 self.isLookingDown = True
                 self.isLookingLeft = False
                 self.isLookingRight = False
                 self.y += self.velocity
-        if self.canGoLeft:
-            if keys[K_LEFT] or keys[K_a]:
+        elif keys[K_LEFT] or keys[K_a]:
+            if self.canGoLeft:
                 self.isWalking = True
                 self.isLookingUp = False
                 self.isLookingDown = False
                 self.isLookingLeft = True
                 self.isLookingRight = False
                 self.x -= self.velocity
-        if self.canGoRight:
-            if keys[K_RIGHT] or keys[K_d]:
+        elif keys[K_RIGHT] or keys[K_d]:
+            if self.canGoRight:
                 self.isWalking = True
                 self.isLookingUp = False
                 self.isLookingDown = False
