@@ -71,37 +71,45 @@ class Player():
         height = display.Info().current_h
 
         if keys[K_UP] or keys[K_w]:
+            self.isLookingUp = True
+            self.isLookingDown = False
+            self.isLookingLeft = False
+            self.isLookingRight = False
             if self.canGoUp:
                 self.isWalking = True
-                self.isLookingUp = True
-                self.isLookingDown = False
-                self.isLookingLeft = False
-                self.isLookingRight = False
                 self.y -= self.velocity
+            else:
+                self.isWalking = False
         elif keys[K_DOWN] or keys[K_s]:
+            self.isLookingUp = False
+            self.isLookingDown = True
+            self.isLookingLeft = False
+            self.isLookingRight = False
             if self.canGoDown:
                 self.isWalking = True
-                self.isLookingUp = False
-                self.isLookingDown = True
-                self.isLookingLeft = False
-                self.isLookingRight = False
                 self.y += self.velocity
+            else:
+                self.isWalking = False
         elif keys[K_LEFT] or keys[K_a]:
+            self.isLookingUp = False
+            self.isLookingDown = False
+            self.isLookingLeft = True
+            self.isLookingRight = False
             if self.canGoLeft:
                 self.isWalking = True
-                self.isLookingUp = False
-                self.isLookingDown = False
-                self.isLookingLeft = True
-                self.isLookingRight = False
                 self.x -= self.velocity
+            else:
+                self.isWalking = False
         elif keys[K_RIGHT] or keys[K_d]:
+            self.isLookingUp = False
+            self.isLookingDown = False
+            self.isLookingLeft = False
+            self.isLookingRight = True
             if self.canGoRight:
                 self.isWalking = True
-                self.isLookingUp = False
-                self.isLookingDown = False
-                self.isLookingLeft = False
-                self.isLookingRight = True
                 self.x += self.velocity
+            else:
+                self.isWalking = False
         else:
             self.isWalking = False
         return
@@ -109,13 +117,13 @@ class Player():
     def detect_collision(self, others):
         selfCenterX = self.x + self.width / 2
         selfCenterY = self.y + self.height / 2
-        selfRangeX = self.width / 2 + self.velocity
-        selfRangeY = self.height / 2 + self.velocity
+        selfRangeX = self.width / 2 #+ self.velocity
+        selfRangeY = self.height / 2 #+ self.velocity
         for other in others:
             otherCenterX = other.x + other.width / 2
             otherCenterY = other.y + other.height / 2
-            otherRangeX = other.width / 2 + other.velocity
-            otherRangeY = other.height / 2 + other.velocity
+            otherRangeX = other.width / 2 #+ other.velocity
+            otherRangeY = other.height / 2 #+ other.velocity
             distanceX = abs(selfCenterX - otherCenterX)
             distanceY = abs(selfCenterY - otherCenterY)
             self.canGoUp = True
