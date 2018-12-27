@@ -13,6 +13,10 @@ class Player():
         self.isLookingDown = True
         self.isLookingLeft = False
         self.isLookingRight = False
+        self.canGoUp = True
+        self.canGoDown = True
+        self.canGoRight = True
+        self.canGoLeft = True
         self.frameDelay = 10
         self.frameCount = 0
         self.tile = 0
@@ -62,11 +66,11 @@ class Player():
             self.tile = 0
             return
 
-    def move(self, keys, isColliding):
+    def move(self, keys):
         width = display.Info().current_w
         height = display.Info().current_h
 
-        if not isColliding:
+        if self.canGoUp:
             if keys[K_UP] or keys[K_w]:
                 self.isWalking = True
                 self.isLookingUp = True
@@ -74,31 +78,83 @@ class Player():
                 self.isLookingLeft = False
                 self.isLookingRight = False
                 self.y -= self.velocity
-            elif keys[K_DOWN] or keys[K_s]:
+        if self.canGoDown:
+            if keys[K_DOWN] or keys[K_s]:
                 self.isWalking = True
                 self.isLookingUp = False
                 self.isLookingDown = True
                 self.isLookingLeft = False
                 self.isLookingRight = False
                 self.y += self.velocity
-            elif keys[K_LEFT] or keys[K_a]:
+        if self.canGoLeft:
+            if keys[K_LEFT] or keys[K_a]:
                 self.isWalking = True
                 self.isLookingUp = False
                 self.isLookingDown = False
                 self.isLookingLeft = True
                 self.isLookingRight = False
                 self.x -= self.velocity
-            elif keys[K_RIGHT] or keys[K_d]:
+        if self.canGoRight:
+            if keys[K_RIGHT] or keys[K_d]:
                 self.isWalking = True
                 self.isLookingUp = False
                 self.isLookingDown = False
                 self.isLookingLeft = False
                 self.isLookingRight = True
                 self.x += self.velocity
-            else:
-                self.isWalking = False
         else:
-            pass
+            self.isWalking = False
+        return
+
+    def detect_collision(self, others):
+        selfCenterX = self.x + self.width / 2
+        selfCenterY = self.y + self.height / 2
+        selfRangeX = self.width / 2 + self.velocity
+        selfRangeY = self.height / 2 + self.velocity
+        for other in others:
+            otherCenterX = other.x + other.width / 2
+            otherCenterY = other.y + other.height / 2
+            otherRangeX = other.width / 2 + other.velocity
+            otherRangeY = other.height / 2 + other.velocity
+            distanceX = abs(selfCenterX - otherCenterX)
+            distanceY = abs(selfCenterY - otherCenterY)
+            self.canGoUp = True
+            self.canGoDown = True
+            self.canGoLeft = True
+            self.canGoRight = True
+
+            if distanceX < selfRangeX + otherRangeX:
+                if distanceY < selfRangeY + otherRangeY:
+                    if selfCenterY > otherCenterY and distanceX < distanceY:
+                        self.canGoUp = False
+                        self.canGoDown = True
+                        self.canGoLeft = True
+                        self.canGoRight = True
+                    elif selfCenterY < otherCenterY and distanceX < distanceY:
+                        self.canGoUp = True
+                        self.canGoDown = False
+                        self.canGoLeft = True
+                        self.canGoRight = True
+                    elif selfCenterX > otherCenterX and distanceX > distanceY:
+                        self.canGoUp = True
+                        self.canGoDown = True
+                        self.canGoLeft = False
+                        self.canGoRight = True
+                    elif selfCenterX < otherCenterX and distanceX > distanceY:
+                        self.canGoUp = True
+                        self.canGoDown = True
+                        self.canGoLeft = True
+                        self.canGoRight = False
+        return
+
+    def debug_data(self, mode=0):
+        if mode:
+            print('xy =', self.x, self.y,
+            '\tvelocity =', self.velocity,
+            '\tisWalking =', self.isWalking,
+            '\ttile =', self.tile,
+            '\tframeCount =', self.frameCount, ' ',
+            '\tcanGoUpDownLeftRight = ', self.canGoUp, self.canGoDown, self.canGoLeft, self.canGoRight)
         return
 
 
