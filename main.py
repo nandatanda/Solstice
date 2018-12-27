@@ -7,9 +7,10 @@ window = pygame.display.set_mode((viewport))
 pygame.display.set_caption('Work In Progress')
 
 player = characters.Player(0, 0)
-npc = characters.NPC(200,200)
+pete = characters.NPC(200,200)
+bob = characters.NPC(500,100)
 
-npcList = [npc]                         # list all onscreen npcs
+npcList = [pete, bob]                         # list all onscreen npcs
 
 run = True
 while run:
@@ -22,11 +23,13 @@ while run:
     keys = pygame.key.get_pressed()     # get a list of all pressed keys
     player.detect_collision(npcList)    # control boundaries for player
     player.move(keys)
-    npc.set_facing(player)              # turn npc when player approaches
+    for npc in npcList:
+        npc.set_facing(player)          # turn npc when player approaches
 
-    player.debug_data(1)
+    player.debug_data(1)                # print the values of various player attributes
 
     window.fill((0, 0, 0))
-    npc.draw(window)
+    for npc in npcList:
+        npc.draw(window)
     player.draw(window)
     pygame.display.update()

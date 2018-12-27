@@ -15,8 +15,8 @@ class Player():
         self.isLookingRight = False
         self.canGoUp = True
         self.canGoDown = True
-        self.canGoRight = True
         self.canGoLeft = True
+        self.canGoRight = True
         self.frameDelay = 10
         self.frameCount = 0
         self.tile = 0
@@ -117,19 +117,19 @@ class Player():
     def detect_collision(self, others):
         selfCenterX = self.x + self.width / 2
         selfCenterY = self.y + self.height / 2
-        selfRangeX = self.width / 2 #+ self.velocity
-        selfRangeY = self.height / 2 #+ self.velocity
+        selfRangeX = self.width / 2
+        selfRangeY = self.height / 2
+        self.canGoUp = True
+        self.canGoDown = True
+        self.canGoLeft = True
+        self.canGoRight = True
         for other in others:
             otherCenterX = other.x + other.width / 2
             otherCenterY = other.y + other.height / 2
-            otherRangeX = other.width / 2 #+ other.velocity
-            otherRangeY = other.height / 2 #+ other.velocity
+            otherRangeX = other.width / 2
+            otherRangeY = other.height / 2
             distanceX = abs(selfCenterX - otherCenterX)
             distanceY = abs(selfCenterY - otherCenterY)
-            self.canGoUp = True
-            self.canGoDown = True
-            self.canGoLeft = True
-            self.canGoRight = True
 
             if distanceX < selfRangeX + otherRangeX:
                 if distanceY < selfRangeY + otherRangeY:
@@ -138,21 +138,25 @@ class Player():
                         self.canGoDown = True
                         self.canGoLeft = True
                         self.canGoRight = True
+                        return
                     elif selfCenterY < otherCenterY and distanceX < distanceY:
                         self.canGoUp = True
                         self.canGoDown = False
                         self.canGoLeft = True
                         self.canGoRight = True
+                        return
                     elif selfCenterX > otherCenterX and distanceX > distanceY:
                         self.canGoUp = True
                         self.canGoDown = True
                         self.canGoLeft = False
                         self.canGoRight = True
+                        return
                     elif selfCenterX < otherCenterX and distanceX > distanceY:
                         self.canGoUp = True
                         self.canGoDown = True
                         self.canGoLeft = True
                         self.canGoRight = False
+                        return
         return
 
     def debug_data(self, mode=0):
@@ -260,21 +264,3 @@ class NPC():
                 self.isLookingLeft = False
                 self.isLookingRight = False
         return
-
-    def detect_collision(self, player):
-        playerCenterX = player.x + player.width / 2
-        playerCenterY = player.y + player.height / 2
-        playerRangeX = player.width / 2 + player.velocity
-        playerRangeY = player.height / 2 + player.velocity
-        selfCenterX = self.x + self.width / 2
-        selfCenterY = self.y + self.height / 2
-        selfRangeX = self.width / 2 + self.velocity
-        selfRangeY = self.height / 2 + self.velocity
-
-        distanceX = abs(selfCenterX - playerCenterX)
-        distanceY = abs(selfCenterY - playerCenterY)
-
-        if distanceX < selfRangeX + playerRangeX:
-            if distanceY < selfRangeY + playerRangeY:
-                return True
-        return False
