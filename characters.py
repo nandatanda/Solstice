@@ -2,6 +2,9 @@ from pygame import *
 
 
 class Player():
+
+    """Create an object containing all attributes and methods of the main character"""
+
     def __init__(self, x, y):
         self.x = x
         self.y = y
@@ -38,6 +41,7 @@ class Player():
             image.load('assets/images/characters/01/1 - R3.png')]
 
     def draw(self, window):
+        """Redraw the player to the screen at its current x and y position"""
         if self.isWalking:
             if self.isLookingUp:
                 window.blit(self.upTiles[self.tile], (self.x, self.y))
@@ -67,8 +71,10 @@ class Player():
             return
 
     def move(self, keys):
+        """ Change the position of the player given the currently pressed keys"""
         width = display.Info().current_w
         height = display.Info().current_h
+        self.switch_sides(width, height)
 
         if keys[K_UP] or keys[K_w]:
             self.isLookingUp = True
@@ -115,6 +121,7 @@ class Player():
         return
 
     def detect_collision(self, others):
+        """Determine which direction is most immediately obstructing the player and set the corresponding attribute"""
         selfCenterX = self.x + self.width / 2
         selfCenterY = self.y + self.height / 2
         selfRangeX = self.width / 2
@@ -159,7 +166,19 @@ class Player():
                         return
         return
 
-    def debug_data(self, mode=0):
+    def switch_sides(self, width, height):
+        """Change the player's position if it has left the current window's dimensions"""
+        if self.y < 0 - self.height:
+            self.y = height
+        elif self.y > height:
+            self.y = 0 - self.height
+        if self.x < 0 - self.width:
+            self.x = width
+        elif self.x > width:
+            self.x = 0 - self.width
+        return
+
+    def debug_mode(self, mode=0):
         if mode:
             print('xy =', self.x, self.y,
             '\tvelocity =', self.velocity,
