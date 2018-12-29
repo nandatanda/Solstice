@@ -20,7 +20,7 @@ class Penny():
         self.canGoDown = True
         self.canGoLeft = True
         self.canGoRight = True
-        self.frameDelay = 10
+        self.frameDelay = 12
         self.frameCount = 0
         self.tile = 0
         self.upTiles = [
@@ -55,7 +55,7 @@ class Penny():
             if self.frameCount % self.frameDelay == 1:
                 self.tile += 1
                 if self.tile > 2:
-                    self.tile = 0
+                    self.tile = 1
             return
         else:
             if self.isLookingUp:

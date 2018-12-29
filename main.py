@@ -8,7 +8,7 @@ viewport = 800, 600
 window = pygame.display.set_mode((viewport))    # set up the window
 pygame.display.set_caption('Work In Progress')  # name the window
 
-scene = scenes.Intro()
+scene = scenes.Intro()                          # set up scene's properties
 player = scene.player                           # instance main character
 npcList = scene.npcs                            # list all onscreen npcs
 
