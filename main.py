@@ -1,16 +1,18 @@
 import pygame
 import characters
+import elements
+import scenes
 pygame.init()
 
 viewport = 800, 600
 window = pygame.display.set_mode((viewport))    # set up the window
 pygame.display.set_caption('Work In Progress')  # name the window
 
-player = characters.Player(0, 0)                # instance all characters here
-pete = characters.NPC(200,200)
-bob = characters.NPC(500,100)
+scene = scenes.Intro()
+player = scene.player                           # instance main character
+npcList = scene.npcs                            # list all onscreen npcs
 
-npcList = [pete]                                # list all onscreen npcs
+prompt = elements.Prompt('space')
 
 run = True
 while run:                                      # begin game loop
@@ -20,11 +22,10 @@ while run:                                      # begin game loop
         if event.type == pygame.QUIT:
             run = False
 
+
     keys = pygame.key.get_pressed()             # get a list of all pressed keys
     player.detect_collision(npcList)            # control boundaries for player
     player.move(keys)
-    for npc in npcList:
-        npc.set_facing(player)                  # turn npc when player approaches
 
     player.debug_mode(1)                        # print the values of various player attributes
 
@@ -32,4 +33,5 @@ while run:                                      # begin game loop
     for npc in npcList:
         npc.draw(window)
     player.draw(window)
+    prompt.draw(window)
     pygame.display.update()

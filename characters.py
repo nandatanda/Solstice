@@ -1,7 +1,7 @@
 from pygame import *
 
 
-class Player():
+class Penny():
 
     """Create an object containing all attributes and methods of the main character"""
 
@@ -12,8 +12,8 @@ class Player():
         self.height = 48
         self.velocity = 5
         self.isWalking = False
-        self.isLookingUp = False
-        self.isLookingDown = True
+        self.isLookingUp = True
+        self.isLookingDown = False
         self.isLookingLeft = False
         self.isLookingRight = False
         self.canGoUp = True
@@ -142,26 +142,14 @@ class Player():
                 if distanceY < selfRangeY + otherRangeY:
                     if selfCenterY > otherCenterY and distanceX < distanceY:
                         self.canGoUp = False
-                        self.canGoDown = True
-                        self.canGoLeft = True
-                        self.canGoRight = True
                         return
                     elif selfCenterY < otherCenterY and distanceX < distanceY:
-                        self.canGoUp = True
                         self.canGoDown = False
-                        self.canGoLeft = True
-                        self.canGoRight = True
                         return
                     elif selfCenterX > otherCenterX and distanceX > distanceY:
-                        self.canGoUp = True
-                        self.canGoDown = True
                         self.canGoLeft = False
-                        self.canGoRight = True
                         return
                     elif selfCenterX < otherCenterX and distanceX > distanceY:
-                        self.canGoUp = True
-                        self.canGoDown = True
-                        self.canGoLeft = True
                         self.canGoRight = False
                         return
         return
@@ -169,8 +157,10 @@ class Player():
     def switch_sides(self, width, height):
         """Change the player's position if it has left the current window's dimensions"""
         if self.y < 0 - self.height:
+            self.exitMapUp = True
             self.y = height
         elif self.y > height:
+            self.exitMapDown = True
             self.y = 0 - self.height
         if self.x < 0 - self.width:
             self.x = width
@@ -189,7 +179,7 @@ class Player():
         return
 
 
-class NPC():
+class Pete():
     def __init__(self, x, y):
         self.x = x
         self.y = y
@@ -197,10 +187,13 @@ class NPC():
         self.height = 48
         self.velocity = 5
         self.isWalking = False
-        self.isLookingUp = False
+        self.isLookingUp = True
         self.isLookingDown = False
-        self.isLookingLeft = True
+        self.isLookingLeft = False
         self.isLookingRight = False
+        self.isTracking = False
+        self.isTalkative = False
+        self.focused = None
         self.frameDelay = 10
         self.frameCount = 0
         self.tile = 0
@@ -238,6 +231,8 @@ class NPC():
                     self.tile = 0
             return
         else:
+            if self.isTracking:
+                self.track_character(self.focused)
             if self.isLookingUp:
                 window.blit(self.upTiles[0], (self.x, self.y))
             elif self.isLookingDown:
@@ -250,34 +245,34 @@ class NPC():
             self.tile = 0
             return
 
-    def set_facing(self, player):
+    def track_character(self, other):
+
         windowWidth = display.Info().current_w
         windowHeight = display.Info().current_h
-        playerCenterX = player.x + player.width / 2
-        playerCenterY = player.y + player.height / 2
-        selfCenterX = self.x + player.width / 2
-        selfCenterY = self.y + player.height / 2
-
-        distanceX = abs(selfCenterX - playerCenterX)
-        distanceY = abs(selfCenterY - playerCenterY)
+        otherCenterX = other.x + other.width / 2
+        otherCenterY = other.y + other.height / 2
+        selfCenterX = self.x + other.width / 2
+        selfCenterY = self.y + other.height / 2
+        distanceX = abs(selfCenterX - otherCenterX)
+        distanceY = abs(selfCenterY - otherCenterY)
 
         if distanceX < windowWidth / 4 and distanceY < windowHeight / 4:
-            if selfCenterX < playerCenterX and distanceX > distanceY:
+            if selfCenterX < otherCenterX and distanceX > distanceY:
                 self.isLookingUp = False
                 self.isLookingDown = False
                 self.isLookingLeft = False
                 self.isLookingRight = True
-            elif selfCenterX > playerCenterX and distanceX > distanceY:
+            elif selfCenterX > otherCenterX and distanceX > distanceY:
                 self.isLookingUp = False
                 self.isLookingDown = False
                 self.isLookingLeft = True
                 self.isLookingRight = False
-            elif selfCenterY < playerCenterY and distanceX < distanceY:
+            elif selfCenterY < otherCenterY and distanceX < distanceY:
                 self.isLookingUp = False
                 self.isLookingDown = True
                 self.isLookingLeft = False
                 self.isLookingRight = False
-            elif selfCenterY > playerCenterY and distanceX < distanceY:
+            elif selfCenterY > otherCenterY and distanceX < distanceY:
                 self.isLookingUp = True
                 self.isLookingDown = False
                 self.isLookingLeft = False
