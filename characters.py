@@ -10,7 +10,7 @@ class Penny():
         self.y = y
         self.width = 32
         self.height = 48
-        self.velocity = 5
+        self.velocity = 4
         self.isWalking = False
         self.isLookingUp = True
         self.isLookingDown = False
@@ -20,7 +20,7 @@ class Penny():
         self.canGoDown = True
         self.canGoLeft = True
         self.canGoRight = True
-        self.frameDelay = 12
+        self.frameDelay = 10
         self.frameCount = 0
         self.tile = 0
         self.upTiles = [
