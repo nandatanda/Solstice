@@ -127,7 +127,7 @@ class Penny():
             self.isWalking = False
         return
 
-    def detect_collision(self, others):
+    def handle_collision(self, others):
         """
         Determine which directions are obstructing the player and set the corresponding attribute(s)
         """

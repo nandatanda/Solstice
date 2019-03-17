@@ -21,7 +21,7 @@ while run:                                              # begin game loop
         run = False
 
     keys = pygame.key.get_pressed()                     # get a list of all pressed keys
-    player.detect_collision(npcList)                    # control boundaries for player
+    player.handle_collision(npcList)                    # control boundaries for player
     player.move(keys)
     player.talk(keys)
 
